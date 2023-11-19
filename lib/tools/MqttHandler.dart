@@ -4,10 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:mqtt_client/mqtt_client.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
 import 'package:plantix/constants.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class MqttHandler with ChangeNotifier {
   final ValueNotifier<String> data = ValueNotifier<String>("");
-  late MqttServerClient client;
+  late final MqttServerClient client;
+  
 
   Future<Object> connect() async {
     client = MqttServerClient.withPort(kEndpoint, kIdentifier, 1883);
@@ -20,14 +22,48 @@ class MqttHandler with ChangeNotifier {
     client.keepAlivePeriod = 60;
     client.logging(on: true);
 
-    client.setProtocolV311();
+    client.setProtocolV31();
 
     final connMessage = MqttConnectMessage()
         .withWillTopic('willTopic')
         .withWillMessage('Will Message')
         .startClean()
         .withWillQos(MqttQos.atLeastOnce);
-    print
+    print('MQTT_LOGS::Mosquitto client connecting....');
+
+    client.connectionMessage = connMessage;
+    try {
+      await client.connect();
+    } catch (e) {
+      print('Exception: $e');
+      client.disconnect();
+    }
+
+    if (client.connectionStatus!.state == MqttConnectionState.connected) {
+      print('MQTT_LOGS::Mosquitto client connected');
+    } else {
+      print(
+          'MQTT_LOGS::ERROR Mosquitto client connection failed - disconnectionstatus is ${client.connectionStatus}');
+      client.disconnect();
+      return -1;
+    }
+
+    print('MQTT_LOGS::Subscribing to the $kTopic topic');
+    const topic = kTopic;
+    client.subscribe(topic, MqttQos.atMostOnce);
+
+    client.updates!.listen((List<MqttReceivedMessage<MqttMessage?>>? c) {
+      final recMess = c![0].payload as MqttPublishMessage;
+      final pt =
+          MqttPublishPayload.bytesToStringAsString(recMess.payload.message);
+      data.value = pt;
+      notifyListeners();
+      print(
+          'MQTT_LOGS:: New data arrived: topic is <${c[0].topic}>, payload is $pt');
+      print('');
+    });
+
+    return client;
   }
 
   void onConnected() {

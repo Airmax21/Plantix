@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:plantix/modules/dashboard/dashboard.dart';
 import 'package:plantix/size_config.dart';
 import 'package:plantix/constants.dart';
 
@@ -14,14 +15,16 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
   void initState() {
     super.initState();
     _controller = AnimationController(
-      duration: Duration(seconds: 10),
+      duration: Duration(seconds: 1),
       vsync: this,
     )
       ..addListener(() {
         setState(() {});
       })
       ..addStatusListener((AnimationStatus status) {
-        if (status == AnimationStatus.completed) {}
+        if (status == AnimationStatus.completed) {
+          Navigator.pushNamed(context, Dashboard.routeName);
+        }
       })
       ..forward();
   }

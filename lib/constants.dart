@@ -9,8 +9,8 @@ Random _rnd = Random();
 String getRandomString(int length) => String.fromCharCodes(Iterable.generate(
     length, (_) => _chars.codeUnitAt(_rnd.nextInt(_chars.length))));
 
-const kEndpoint = '172.29.25.71';
-String kIdentifier = 'Andro-${getRandomString(10)}';
+const kEndpoint = '192.168.1.7';
+String kIdentifier = 'Android';
 Color kPrimaryColor = HexColor('#4CAF50');
 const kTopic = 'tes';
 const kPrimaryLightColor = Color(0xFFFFECDF);
