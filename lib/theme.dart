@@ -6,7 +6,7 @@ import 'constants.dart';
 ThemeData theme() {
   return ThemeData(
     scaffoldBackgroundColor: Colors.white,
-    fontFamily: "Muli",
+    fontFamily: "OpenSans",
     appBarTheme: appBarTheme(),
     textTheme: textTheme(),
     inputDecorationTheme: inputDecorationTheme(),
@@ -34,7 +34,10 @@ InputDecorationTheme inputDecorationTheme() {
 
 TextTheme textTheme() {
   return TextTheme(
-    bodyText1: TextStyle(color: kTextColor),
+    headline1: TextStyle(
+        color: kPrimaryColor, fontSize: 25, fontWeight: FontWeight.w300),
+    headline2: TextStyle(color: kTextColor, fontSize: 20),
+    bodyText1: TextStyle(color: kTextColor, fontSize: 12),
     bodyText2: TextStyle(color: kTextColor),
   );
 }
@@ -42,7 +45,6 @@ TextTheme textTheme() {
 AppBarTheme appBarTheme() {
   return AppBarTheme(
     color: kPrimaryColor,
-    elevation: 0,
     systemOverlayStyle: SystemUiOverlayStyle.light,
     iconTheme: IconThemeData(color: kPrimaryLightColor),
   );

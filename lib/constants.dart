@@ -9,10 +9,8 @@ Random _rnd = Random();
 String getRandomString(int length) => String.fromCharCodes(Iterable.generate(
     length, (_) => _chars.codeUnitAt(_rnd.nextInt(_chars.length))));
 
-const kEndpoint = '192.168.1.7';
-String kIdentifier = 'Android';
+const kEndpoint = 'http://10.10.10.97:3000/';
 Color kPrimaryColor = HexColor('#4CAF50');
-const kTopic = 'tes';
 const kPrimaryLightColor = Color(0xFFFFECDF);
 const kPrimaryGradientColor = LinearGradient(
   begin: Alignment.topLeft,

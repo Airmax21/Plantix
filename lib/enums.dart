@@ -1,1 +1,1 @@
-enum MenuState { dashboard, scan, profile }
+enum MenuState { dashboard, control, settings }
