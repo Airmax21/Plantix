@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:plantix/modules/control/control.dart';
 import 'package:plantix/modules/dashboard/dashboard.dart';
+import 'package:plantix/modules/report/report.dart';
 import 'package:plantix/size_config.dart';
 
 import '../constants.dart';
@@ -83,6 +84,31 @@ class CustomBottomNavBar extends StatelessWidget {
                   'Control',
                   style: TextStyle(
                       color: MenuState.control == selectedMenu
+                          ? kPrimaryColor
+                          : inActiveIconColor,
+                      fontSize: 11,
+                      fontWeight: FontWeight.bold),
+                )
+              ],
+            ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                IconButton(
+                  icon: SvgPicture.asset(
+                    "assets/icons/report.svg",
+                    color: MenuState.report == selectedMenu
+                        ? kPrimaryColor
+                        : inActiveIconColor,
+                    width: getProportionateScreenWidth(30),
+                  ),
+                  onPressed: () =>
+                      Navigator.pushNamed(context, Report.routeName),
+                ),
+                Text(
+                  'Report',
+                  style: TextStyle(
+                      color: MenuState.report == selectedMenu
                           ? kPrimaryColor
                           : inActiveIconColor,
                       fontSize: 11,

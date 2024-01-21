@@ -9,7 +9,7 @@ Random _rnd = Random();
 String getRandomString(int length) => String.fromCharCodes(Iterable.generate(
     length, (_) => _chars.codeUnitAt(_rnd.nextInt(_chars.length))));
 
-const kEndpoint = 'http://10.10.10.97:3000/';
+const kEndpoint = 'https://iqbal.widyawicara.dev/';
 Color kPrimaryColor = HexColor('#4CAF50');
 const kPrimaryLightColor = Color(0xFFFFECDF);
 const kPrimaryGradientColor = LinearGradient(
