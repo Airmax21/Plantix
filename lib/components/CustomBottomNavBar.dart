@@ -52,8 +52,8 @@ class CustomBottomNavBar extends StatelessWidget {
                         : inActiveIconColor,
                     width: getProportionateScreenWidth(30),
                   ),
-                  onPressed: () =>
-                      Navigator.pushNamed(context, Dashboard.routeName),
+                  onPressed: () => Navigator.pushReplacementNamed(
+                      context, Dashboard.routeName),
                 ),
                 Text(
                   'Dashboard',
@@ -77,8 +77,8 @@ class CustomBottomNavBar extends StatelessWidget {
                         : inActiveIconColor,
                     width: getProportionateScreenWidth(30),
                   ),
-                  onPressed: () =>
-                      Navigator.pushNamed(context, Control.routeName),
+                  onPressed: () => Navigator.pushReplacementNamed(
+                      context, Control.routeName),
                 ),
                 Text(
                   'Control',
@@ -103,7 +103,7 @@ class CustomBottomNavBar extends StatelessWidget {
                     width: getProportionateScreenWidth(30),
                   ),
                   onPressed: () =>
-                      Navigator.pushNamed(context, Report.routeName),
+                      Navigator.pushReplacementNamed(context, Report.routeName),
                 ),
                 Text(
                   'Report',
@@ -116,31 +116,6 @@ class CustomBottomNavBar extends StatelessWidget {
                 )
               ],
             ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                IconButton(
-                  icon: SvgPicture.asset(
-                    "assets/icons/settings.svg",
-                    color: MenuState.settings == selectedMenu
-                        ? kPrimaryColor
-                        : inActiveIconColor,
-                    width: getProportionateScreenWidth(30),
-                  ),
-                  onPressed: () =>
-                      Navigator.pushNamed(context, Dashboard.routeName),
-                ),
-                Text(
-                  'Settings',
-                  style: TextStyle(
-                      color: MenuState.settings == selectedMenu
-                          ? kPrimaryColor
-                          : inActiveIconColor,
-                      fontSize: 11,
-                      fontWeight: FontWeight.bold),
-                )
-              ],
-            )
           ],
         ),
       ),
@@ -151,11 +126,11 @@ class CustomBottomNavBar extends StatelessWidget {
     //     TabData(
     //         iconData: Icons.home,
     //         title: "Home",
-    //         onclick: () => Navigator.pushNamed(context, Dashboard.routeName)),
+    //         onclick: () => Navigator.pushReplacementNamed(context, Dashboard.routeName)),
     //     TabData(
     //         iconData: Icons.search,
     //         title: "Search",
-    //         onclick: () => Navigator.pushNamed(context, Dashboard.routeName)),
+    //         onclick: () => Navigator.pushReplacementNamed(context, Dashboard.routeName)),
     //     TabData(iconData: Icons.shopping_cart, title: "Basket")
     //   ],
     //   initialSelection: 1,

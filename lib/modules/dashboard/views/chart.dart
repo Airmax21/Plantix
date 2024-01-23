@@ -13,7 +13,6 @@ class Chart extends StatefulWidget {
 
 class _Chart extends State<Chart> {
   late TooltipBehavior _tooltipBehavior;
-  List<Data> ldata = [];
   @override
   void initState() {
     _tooltipBehavior = TooltipBehavior(enable: true);

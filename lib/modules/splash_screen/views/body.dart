@@ -23,7 +23,7 @@ class _BodyState extends State<Body> with TickerProviderStateMixin {
       })
       ..addStatusListener((AnimationStatus status) {
         if (status == AnimationStatus.completed) {
-          Navigator.pushNamed(context, Dashboard.routeName);
+          Navigator.pushReplacementNamed(context, Dashboard.routeName);
         }
       })
       ..forward();

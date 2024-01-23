@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:plantix/constants.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -26,15 +29,43 @@ Future<void> fetchData(String tgl_mulai, String tgl_akhir,
   if (response.statusCode == 200) {
     for (var dat in fetch) {
       data.add(Data(
-        id: fetch['id'],
-        sumber: fetch['sumber'],
-        tgl_terima: fetch['tgl_terima'],
-        soilhumid: fetch['soilhumid'].toDouble(),
-        airhumid: fetch['airhumid'].toDouble(),
-        temp: fetch['temp'].toDouble(),
-        lightint: fetch['lightint'].toDouble(),
-        tanaman_status: fetch['tanaman_status'],
+        id: dat['id'],
+        sumber: dat['sumber'],
+        tgl_terima: dat['tgl_terima'],
+        soilhumid: dat['soilhumid'].toDouble(),
+        airhumid: dat['airhumid'].toDouble(),
+        temp: dat['temp'].toDouble(),
+        lightint: dat['lightint'].toDouble(),
+        tanaman_status: dat['tanaman_status'],
       ));
     }
+  }
+}
+
+Future<void> downloadFile(String tgl_mulai, String tgl_akhir,
+    {String sumber = 'arduino'}) async {
+  Directory? directory;
+  var url = Uri.parse('${kEndpoint}print/');
+  var headers = {'Content-Type': 'application/x-www-form-urlencoded'};
+  var body = {
+    'tgl_mulai': '${tgl_mulai}',
+    'tgl_akhir': '${tgl_akhir}',
+    'sumber': '${sumber}',
+  };
+  debugPrint(tgl_mulai);
+  var response = await http.post(url, headers: headers, body: body);
+
+  if (response.statusCode == 200) {
+    if (Platform.isIOS) {
+      directory = await getApplicationDocumentsDirectory(); // for iOS
+    } else {
+      directory = Directory('/storage/emulated/0/Download/'); // for android
+      if (!await directory.exists())
+        directory = (await getExternalStorageDirectory())!;
+    }
+    final filePath = '${directory.path}/data_sensor.xlsx';
+
+    File file = File(filePath);
+    await file.writeAsBytes(response.bodyBytes);
   }
 }

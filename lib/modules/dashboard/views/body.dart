@@ -28,7 +28,7 @@ class _BodyState extends State<Body> {
     timer = Timer.periodic(Duration(seconds: 5), (Timer t) {
       setState(() {
         data = getData();
-        ldata.add(data);
+        ldata = getDataGraph();
       });
     });
   }

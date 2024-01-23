@@ -4,23 +4,29 @@ import 'package:hexcolor/hexcolor.dart';
 import 'package:plantix/components/CustomDateTimePicker.dart';
 import 'package:plantix/components/CustomSurffixIcon.dart';
 import 'package:plantix/constants.dart';
-import 'package:plantix/models/Pompa.dart';
-import 'package:plantix/modules/control/controllers/getData.dart';
+import 'package:plantix/models/Data.dart';
 import 'package:plantix/size_config.dart';
+import 'package:plantix/modules/report/controllers/getData.dart';
 import 'package:plantix/modules/control/controllers/postData.dart';
 
 class Filter extends StatefulWidget {
+  final void Function(List<String> Post)? onSearch;
+
+  const Filter({
+    this.onSearch,
+  });
+
   @override
   _Filter createState() => _Filter();
 }
 
 class _Filter extends State<Filter> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  List<Data> data = [];
+  bool isLoading = false;
   DateTime? tgl_mulai;
   DateTime? tgl_akhir;
   String? sumber;
-  TextEditingController _nameController = TextEditingController();
-  TextEditingController _emailController = TextEditingController();
 
   @override
   void initState() {
@@ -78,15 +84,57 @@ class _Filter extends State<Filter> {
                   ),
                 ),
                 ElevatedButton(
-                  onPressed: () {
+                  onPressed: () async {
                     if (_formKey.currentState!.validate()) {
                       _formKey.currentState!.save();
+
+                      try {
+                        setState(() {
+                          isLoading = true;
+                        });
+                        List<Data> newData = await getData(
+                            tgl_mulai.toString(), tgl_akhir.toString(),
+                            sumber: sumber.toString());
+                        List<String> post = [
+                          tgl_mulai.toString(),
+                          tgl_akhir.toString(),
+                          sumber.toString()
+                        ];
+                        widget.onSearch!(post);
+                        Future.delayed(Duration(seconds: 2), () {
+                          setState(() {
+                            data = newData;
+                            isLoading = false;
+                          });
+                        });
+                      } catch (error) {
+                        setState(() {
+                          isLoading = false;
+                        });
+                      }
                     }
                   },
                   child: Text('Cari'),
                 ),
               ],
             ),
+            isLoading
+                ? CircularProgressIndicator()
+                : SizedBox(
+                    height: getProportionateScreenHeight(590),
+                    child: ListView.builder(
+                      itemCount: data.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return Card(
+                          child: ListTile(
+                            title: Text(
+                                'Tanggal : ${DateTime.parse(data[index].tgl_terima)}'),
+                            subtitle: Text(
+                                'soilhumid: ${data[index].soilhumid}\nairhumid: ${data[index].airhumid}\ntemp: ${data[index].temp}\nlightint: ${data[index].lightint}\ntanaman_status: ${data[index].tanaman_status}'),
+                          ),
+                        );
+                      },
+                    )),
           ],
         ),
       ),
