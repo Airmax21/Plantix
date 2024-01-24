@@ -42,11 +42,8 @@ class _BodyState extends State<Body> {
       )),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          await downloadFile(post[0], post[1], sumber: post[2]);
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text('File berhasil di download pada folder Download'),
-            duration: Duration(seconds: 3),
-          ));
+          await downloadFile(post[0], post[1], context, sumber: post[2]);
+          
         },
         child: Icon(Icons.print),
         backgroundColor: kPrimaryColor,

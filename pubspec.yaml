@@ -44,7 +44,7 @@ dependencies:
   syncfusion_flutter_gauges: ^23.1.44
   syncfusion_flutter_charts: any
   hexcolor: any
-  flutter_local_notifications: any
+  permission_handler: any
 
 dev_dependencies:
   flutter_test:

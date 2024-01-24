@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:plantix/constants.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -42,9 +43,11 @@ Future<void> fetchData(String tgl_mulai, String tgl_akhir,
   }
 }
 
-Future<void> downloadFile(String tgl_mulai, String tgl_akhir,
+Future<void> downloadFile(
+    String tgl_mulai, String tgl_akhir, BuildContext context,
     {String sumber = 'arduino'}) async {
   Directory? directory;
+  var status = await Permission.storage.request();
   var url = Uri.parse('${kEndpoint}print/');
   var headers = {'Content-Type': 'application/x-www-form-urlencoded'};
   var body = {
@@ -56,16 +59,37 @@ Future<void> downloadFile(String tgl_mulai, String tgl_akhir,
   var response = await http.post(url, headers: headers, body: body);
 
   if (response.statusCode == 200) {
-    if (Platform.isIOS) {
-      directory = await getApplicationDocumentsDirectory(); // for iOS
-    } else {
-      directory = Directory('/storage/emulated/0/Download/'); // for android
-      if (!await directory.exists())
-        directory = (await getExternalStorageDirectory())!;
+    if (status.isGranted) {
+      if (Platform.isIOS) {
+        directory = await getApplicationDocumentsDirectory(); // for iOS
+      } else {
+        directory = Directory('/storage/emulated/0/Download/'); // for android
+        if (!await directory.exists())
+          directory = (await getExternalStorageDirectory())!;
+      }
+      final filePath = '${directory.path}/data_sensor.xlsx';
+      if (await File(filePath).exists()) {
+        await File(filePath).delete();
+      }
+      File file = File(filePath);
+      await file.writeAsBytes(response.bodyBytes);
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('File berhasil di download pada folder Download'),
+        duration: Duration(seconds: 3),
+        backgroundColor: Colors.green,
+      ));
+    } else if (status.isDenied) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('Gagal! Perizinan file ditolak'),
+        duration: Duration(seconds: 3),
+        backgroundColor: Colors.red,
+      ));
+    } else if (status.isPermanentlyDenied) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('Gagal! Perizinan file ditolak permanen'),
+        duration: Duration(seconds: 3),
+        backgroundColor: Colors.red,
+      ));
     }
-    final filePath = '${directory.path}/data_sensor.xlsx';
-
-    File file = File(filePath);
-    await file.writeAsBytes(response.bodyBytes);
   }
 }

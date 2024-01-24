@@ -1,4 +1,4 @@
-package com.example.plantix
+package com.softech.plantix
 
 import io.flutter.embedding.android.FlutterActivity
 
